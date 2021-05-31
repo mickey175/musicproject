@@ -1,23 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
+import Musictool from "./p5-scetch";
+import React from "react";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <canvas id="audioVis" height="500" width="1400"/>
+        <Musictool/>
     </div>
   );
 }

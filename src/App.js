@@ -5,7 +5,8 @@ import React from "react";
 function App() {
   return (
     <div className="App">
-        <canvas id="audioVis" height="500" width="1400"/>
+        <p className={"headline"}>Music recognition and visualization</p>
+        <canvas id="audioVis" className={"audioVis"} height="500" width="1400"/>
         <Musictool/>
     </div>
   );

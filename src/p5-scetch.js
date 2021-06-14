@@ -1,4 +1,7 @@
 import React from "react";
+import styles from "./scetchStyle.css"
+import {getMusicInformation} from "./sendRequsest";
+
 
 export default function Musictool(props) {
 
@@ -7,6 +10,8 @@ export default function Musictool(props) {
     let analyser = null;
     let canvas = null
     let canvasContext = null;
+    let mediaRecorder = null;
+    let chunks = [];
 
     React.useEffect(() => {
         canvas = document.getElementById("audioVis");
@@ -27,6 +32,20 @@ export default function Musictool(props) {
         })
             .then( function audioCallback(stream) {
                 audioContext = new AudioContext();
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                console.log(mediaRecorder.state);
+                console.log("recorder started");
+                chunks = [];
+                mediaRecorder.ondataavailable = function(e) {
+                    chunks.push(e.data);
+                }
+
+                mediaRecorder.onstop = function(e) {
+                    const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+                    chunks = [];
+                }
+
                 audioSource = audioContext.createMediaStreamSource(stream);
                 analyser = audioContext.createAnalyser();
                 analyser.fftSize = 2048;
@@ -35,17 +54,23 @@ export default function Musictool(props) {
                 audioSource.connect(audioContext.destination);
                 let data = new Uint8Array(analyser.frequencyBinCount);
                 requestAnimationFrame(loopingFunction);
-
+                getMusicInformation();
                 function loopingFunction(){
                     requestAnimationFrame(loopingFunction);
                     analyser.getByteFrequencyData(data);
                     draw(data);
                 }
             })
+
+
     }
 
     function stopRecording(){
         console.log("Stop recording...")
+        mediaRecorder.stop();
+        console.log(mediaRecorder.state);
+        console.log("recorder stopped");
+
         canvasContext.clearRect(0,0,canvas.width,canvas.height);
         audioSource.disconnect()
     }
@@ -58,15 +83,19 @@ export default function Musictool(props) {
             canvasContext.beginPath();
             canvasContext.moveTo(space*i,canvas.height);
             canvasContext.lineTo(space*i,canvas.height-value);
-            canvasContext.strokeStyle = "#FF0000";
+            canvasContext.strokeStyle = `rgb(
+                ${Math.floor(240)},
+                ${Math.floor(233)},
+                ${Math.floor(180)})`
+            ;
             canvasContext.stroke();
         })
     }
 
     return(
         <div>
-            <button title="startRecord" onClick={startRecord}>Start</button>
-            <button title="startRecord" onClick={stopRecording}>Stop</button>
+            <button title="startRecord" className={"button"} onClick={startRecord}>Start music recognition</button>
+            <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>
         </div>
-);
-};
+    );
+}

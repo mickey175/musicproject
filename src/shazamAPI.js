@@ -1,5 +1,10 @@
 import unirest from 'unirest';
+import {createSocketServer} from "./socket.js";
+import { EventEmitter } from 'events';
 import * as dot from 'dotenv'
+
+const client = createSocketServer();
+const emitter = new EventEmitter();
 
 let apiAuth = {
     key: dot.config().parsed.XRAPIDAPIKEY,
@@ -25,7 +30,7 @@ export function fetchShazamDataByText(spokenText) {
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
-
+        emitter.emit('test', res.body);
         console.log(res.body);
     });
 }
@@ -46,7 +51,9 @@ export function fetchShazamDataByBase64(text){
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
         console.log(res.body);
+        client.emit('incoming', JSON.stringify(res.body));
         return res.body;
     });
-    return("Fin")
 }
+
+fetchShazamDataByBase64("test")

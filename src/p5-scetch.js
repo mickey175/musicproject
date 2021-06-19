@@ -1,7 +1,5 @@
 import React from "react";
 import styles from "./scetchStyle.css"
-import {getMusicInformation} from "./sendRequsest";
-
 
 export default function Musictool(props) {
 
@@ -54,7 +52,7 @@ export default function Musictool(props) {
                 audioSource.connect(audioContext.destination);
                 let data = new Uint8Array(analyser.frequencyBinCount);
                 requestAnimationFrame(loopingFunction);
-                getMusicInformation();
+
                 function loopingFunction(){
                     requestAnimationFrame(loopingFunction);
                     analyser.getByteFrequencyData(data);

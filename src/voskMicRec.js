@@ -2,6 +2,7 @@ import * as vosk from 'vosk';
 import { Readable } from 'stream';
 import { Reader } from 'wav';
 import { existsSync, createWriteStream } from 'fs';
+import { fetchShazamDataByText } from "./shazamAPI.js"
 
 const MODEL_PATH = 'model';
 const SAMPLE_RATE = 16000;
@@ -27,7 +28,9 @@ export const getWfReader = () => {
         for await (const data of wfReadable) {
             rec.acceptWaveform(data);
         }
-        console.log("Result: "+rec.finalResult().text)
+        let convertedText = rec.finalResult().text
+        console.log("Text: "+convertedText)
+        fetchShazamDataByText(convertedText)
         //emitter.emit('result', rec.finalResult().text);
         rec.free();
     });

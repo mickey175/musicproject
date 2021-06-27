@@ -11,11 +11,11 @@ let apiAuth = {
     host: dot.config().parsed.XRAPIDAPIHOST
 }
 
-export function fetchShazamDataByText(spokenText) {
+export function fetchShazamDataByText(lyrics) {
     const req = unirest("GET", "https://shazam.p.rapidapi.com/search");
 
     req.query({
-        "term": spokenText,
+        "term": lyrics,
         "locale": "en-US",
         "offset": "0",
         "limit": "5"
@@ -35,7 +35,7 @@ export function fetchShazamDataByText(spokenText) {
     });
 }
 
-export function fetchShazamDataByBase64(text){
+export function fetchShazamDataByBase64(audioFingerprint){
     const req = unirest("POST", "https://shazam.p.rapidapi.com/songs/detect");
 
     req.headers({
@@ -44,9 +44,8 @@ export function fetchShazamDataByBase64(text){
         "x-rapidapi-host": apiAuth.host,
         "useQueryString": true
     });
-    console.log(text)
-    req.send(text);
-
+    console.log("Fetching the Audio Information...")
+    req.send(audioFingerprint);
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
@@ -55,5 +54,3 @@ export function fetchShazamDataByBase64(text){
         return res.body;
     });
 }
-
-fetchShazamDataByBase64("test")

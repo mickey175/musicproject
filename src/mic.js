@@ -1,35 +1,40 @@
 import record from 'node-mic-record'
-import {getWfReader} from "./voskMicRec.js";
 import {fetchShazamDataByBase64} from "./shazamAPI.js";
-import {Reader} from "wav";
+import * as wav from "wav";
 import {Readable} from "stream";
-import base64 from "base-64";
+import * as fs from "fs";
 
-const wfReader = new Reader();
+const wfReader = new wav.Reader({
+    "channels": 1,
+    "sampleRate": 44100,
+    "bitDepth": 16
+});
 const wfReadable = new Readable().wrap(wfReader);
-let base64data = null;
+
+var fileWriter = new wav.FileWriter('demo.wav', {
+    channels: 1,
+    sampleRate: 44100,
+    bitDepth: 16
+});
+
 record.start({
     sampleRate : 44100,
     channels: 1,
     bits: 16,
-    encoding: "base64",
-    recordProgram: 'rec'
-}).pipe(wfReader)
+    decode: null,
+    verbose: false,
+    recordProgram: 'arecord'
+}).pipe(fileWriter)
 
-wfReader.on('end', async () => {
-    //wfReadable.setEncoding("utf8")
+wfReader.on('format', async () => {
     for await (const data of wfReadable) {
-        //base64data = base64.encode(data);
-        //console.log(base64data)
-
-        base64data = Buffer.from(data,"hex").toString("base64")
-        //base64data = data;
+        // convert stream to base64...
     }
-    fetchShazamDataByBase64(base64data)
-
+    //fetchShazamDataByBase64()
 });
-
 
 setTimeout(function () {
     record.stop()
-}, 2000)
+    const contents = fs.readFileSync('demo.wav', {encoding: 'base64'});
+    fetchShazamDataByBase64(contents);
+}, 5000)

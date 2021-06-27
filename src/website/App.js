@@ -1,18 +1,27 @@
 import './App.css';
-import Musictool from "./components/p5-scetch";
+import Musictool from "./components/p5-scetch.js";
 import {useEffect, useState, setState} from "react";
 import io from 'socket.io-client';
+
 const ioClient = io.connect('http://localhost:8090');
 
 function App() {
+
     useEffect(() => {
-        ioClient.on('incoming', (text) => {
-            setState({ test:text  })
+        ioClient.on('incoming', (songData) => {
+            console.log(songData)
+            setState({
+                title: songData.title,
+                subtitle: songData.subtitle,
+                isData:true  })
         } );
     });
 
     const initialState = {
-        test: 'unknown'
+        title: "unknown",
+        subtitle: "unknown",
+        isData: false
+
     };
 
     const [state, setState] = useState(initialState);
@@ -20,8 +29,11 @@ function App() {
     return (
     <div className="App">
         <p className={"headline"}>Music recognition and visualization</p>
-        <canvas id="audioVis" className={"audioVis"} height="500" width="1400"/>
-        <p>Hier steht das Lied:{state.test}</p>
+        <canvas id="audioVis" className={state.isData ? 'audioHid' : 'audioVis'} height="500" width="1400"/>
+        <div>
+            <p>{state.title}</p>
+            <p>{state.subtitle}</p>
+        </div>
         <Musictool/>
     </div>
   );

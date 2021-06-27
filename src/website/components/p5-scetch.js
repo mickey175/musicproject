@@ -21,7 +21,6 @@ export default function Musictool(props) {
 
     function startRecord(){
         console.log("Start recording...")
-
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
         navigator.mediaDevices.getUserMedia({
@@ -59,8 +58,6 @@ export default function Musictool(props) {
                     draw(data);
                 }
             })
-
-
     }
 
     function stopRecording(){
@@ -90,9 +87,14 @@ export default function Musictool(props) {
         })
     }
 
+    function startRecognition(){
+        startRecord();
+    }
+
     return(
+
         <div>
-            <button title="startRecord" className={"button"} onClick={startRecord}>Start music recognition</button>
+            <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
             <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>
         </div>
     );

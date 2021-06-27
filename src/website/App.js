@@ -1,5 +1,5 @@
 import './App.css';
-import Musictool from "./p5-scetch";
+import Musictool from "./components/p5-scetch";
 import {useEffect, useState, setState} from "react";
 import io from 'socket.io-client';
 const ioClient = io.connect('http://localhost:8090');

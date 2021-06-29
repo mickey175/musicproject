@@ -9,6 +9,7 @@ const auth = {
 export function fetchShazamDataByText(lyrics) {
     const req = unirest("GET", "https://shazam.p.rapidapi.com/search");
 
+    console.log("Fetching the Audio Information...")
     req.query({
         "term": lyrics,
         "locale": "en-US",
@@ -24,7 +25,7 @@ export function fetchShazamDataByText(lyrics) {
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
-        emitter.emit('test', res.body);
+        emitter.emit('incoming', parseJSON(res.body));
         console.log(res.body);
     });
 }

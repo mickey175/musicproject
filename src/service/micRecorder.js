@@ -4,7 +4,7 @@ import * as wav from "wav";
 import {Readable} from "stream";
 import * as fs from "fs";
 
-export function fetchMicStream(){
+export let fetchMicStream = () => {
     const wfReader = new wav.Reader({
         "channels": 1,
         "sampleRate": 44100,
@@ -40,4 +40,3 @@ export function fetchMicStream(){
         fetchShazamDataByBase64(wavEncoded);
     }, 2500)
 }
-fetchMicStream();

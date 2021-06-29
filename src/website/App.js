@@ -2,6 +2,7 @@ import './App.css';
 import Musictool from "./components/p5-scetch.js";
 import {useEffect, useState, setState} from "react";
 import io from 'socket.io-client';
+import SongPanel from "./components/songPanel";
 
 const ioClient = io.connect('http://localhost:8090');
 
@@ -30,11 +31,8 @@ function App() {
     <div className="App">
         <p className={"headline"}>Music recognition and visualization</p>
         <canvas id="audioVis" className={state.isData ? 'audioHid' : 'audioVis'} height="500" width="1400"/>
-        <div>
-            <p>{state.title}</p>
-            <p>{state.subtitle}</p>
-        </div>
-        <Musictool/>
+        <SongPanel title={state.title} subtitle={state.subtitle} className={state.isData ? 'audioVis' : 'audioHid'}/>
+        <Musictool />
     </div>
   );
 }

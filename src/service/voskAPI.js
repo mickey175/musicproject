@@ -7,8 +7,6 @@ import { fetchShazamDataByText } from "./shazamAPI.js"
 const MODEL_PATH = 'model';
 const SAMPLE_RATE = 16000;
 
-
-
 if (!existsSync(MODEL_PATH)) {
     console.log("Please download the model from https://alphacephei.com/vosk/models and unpack as " + MODEL_PATH + " in the current folder.")
     process.exit()

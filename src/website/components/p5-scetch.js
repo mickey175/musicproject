@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./scetchStyle.css"
 
 export default function Musictool(props) {
@@ -12,17 +12,16 @@ export default function Musictool(props) {
     let chunks = [];
 
     React.useEffect(() => {
+
         canvas = document.getElementById("audioVis");
-        if (canvas) {
-            console.log("Canvas is loaded: "+canvas);
+        if (!canvas) {
+            console.log("Error while trying to load canvas...");
         }
         canvasContext = canvas.getContext("2d");
     })
 
     function startRecord(){
-        console.log("Start recording...")
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
         navigator.mediaDevices.getUserMedia({
             video : false,
             audio : true
@@ -31,8 +30,6 @@ export default function Musictool(props) {
                 audioContext = new AudioContext();
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
-                console.log(mediaRecorder.state);
-                console.log("recorder started");
                 chunks = [];
                 mediaRecorder.ondataavailable = function(e) {
                     chunks.push(e.data);
@@ -61,11 +58,7 @@ export default function Musictool(props) {
     }
 
     function stopRecording(){
-        console.log("Stop recording...")
         mediaRecorder.stop();
-        console.log(mediaRecorder.state);
-        console.log("recorder stopped");
-
         canvasContext.clearRect(0,0,canvas.width,canvas.height);
         audioSource.disconnect()
     }
@@ -87,8 +80,20 @@ export default function Musictool(props) {
         })
     }
 
-    function startRecognition(){
+    function startRecognition() {
         startRecord();
+
+        fetch('http://localhost:8090/', {method: 'GET'})
+            .then(function(response) {
+                if(response.ok) {
+                    console.log('Send request for audio data...');
+                    return;
+                }
+                throw new Error('Request failed.');
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
     }
 
     return(

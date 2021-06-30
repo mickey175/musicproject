@@ -29,8 +29,8 @@ function App() {
 
     return (
     <div className="App">
-        <p className={"headline"}>Music recognition and visualization</p>
-        <canvas id="audioVis" className={state.isData ? 'audioHid' : 'audioVis'} height="500" width="1400"/>
+        <p id="p2" className={"headline"}>Music recognition and visualization</p>
+        <div id="audioVis" className={state.isData ? 'audioHid' : 'audioVis'} />
         <SongPanel title={state.title} subtitle={state.subtitle} className={state.isData ? 'audioVis' : 'audioHid'}/>
         <Musictool />
     </div>

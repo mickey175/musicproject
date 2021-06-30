@@ -1,23 +1,27 @@
 import React, {useState} from "react";
-import styles from "./scetchStyle.css"
+import styles from "./scetchStyle.css";
+import * as d3 from 'd3';
 
 export default function Musictool(props) {
 
     let audioContext = null;
     let audioSource = null;
     let analyser = null;
-    let canvas = null
+    let svgContainer = null
+    const containerHeight = 600;
+    const containerWidth = 1400;
+    let svg = null;
+
     let canvasContext = null;
     let mediaRecorder = null;
     let chunks = [];
 
-    React.useEffect(() => {
 
-        canvas = document.getElementById("audioVis");
-        if (!canvas) {
-            console.log("Error while trying to load canvas...");
+    React.useEffect(() => {
+        svgContainer = document.getElementById("audioVis");
+        if (!svgContainer) {
+            console.log("Error while trying to load svgContainer...");
         }
-        canvasContext = canvas.getContext("2d");
     })
 
     function startRecord(){
@@ -32,6 +36,7 @@ export default function Musictool(props) {
                 mediaRecorder.start();
                 chunks = [];
                 mediaRecorder.ondataavailable = function(e) {
+                    console.log(e.data)
                     chunks.push(e.data);
                 }
 
@@ -47,37 +52,56 @@ export default function Musictool(props) {
 
                 audioSource.connect(audioContext.destination);
                 let data = new Uint8Array(analyser.frequencyBinCount);
-                requestAnimationFrame(loopingFunction);
-
-                function loopingFunction(){
-                    requestAnimationFrame(loopingFunction);
-                    analyser.getByteFrequencyData(data);
-                    draw(data);
-                }
+                drawD3SVG();
+                draw(data);
             })
     }
 
     function stopRecording(){
         mediaRecorder.stop();
-        canvasContext.clearRect(0,0,canvas.width,canvas.height);
+        canvasContext.clearRect(0,0,svgContainer.width,svgContainer.height);
         audioSource.disconnect()
     }
 
-    function draw(data){
-        data = [...data];
-        canvasContext.clearRect(0,0,canvas.width,canvas.height);
-        let space = canvas.width / data.length;
-        data.forEach((value,i) => {
-            canvasContext.beginPath();
-            canvasContext.moveTo(space*i,canvas.height);
-            canvasContext.lineTo(space*i,canvas.height-value);
-            canvasContext.strokeStyle = `rgb(
-                ${Math.floor(240)},
-                ${Math.floor(233)},
-                ${Math.floor(180)})`
-            ;
-            canvasContext.stroke();
-        })
+    function drawD3SVG(){
+        svg = d3.select("#audioVis")
+            .style("background", "transparent")
+            .append("svg")
+            .attr("width", containerWidth)
+            .attr("height", containerHeight);
+    }
+
+    function draw(frequencyData){
+        function renderChart() {
+            requestAnimationFrame(renderChart);
+
+            analyser.getByteFrequencyData(frequencyData);
+
+            var radiusScale = d3.scaleLinear()
+                .domain([0, d3.max(frequencyData)])
+                .range([0, containerHeight/2 -10]);
+
+            var hueScale = d3.scaleLinear()
+                .domain([0, d3.max(frequencyData)])
+                .range([0, 360]);
+
+
+            var circles = svg.selectAll('circle')
+                .data(frequencyData);
+
+            circles.enter().append('circle');
+            circles.attr("r",function(d) { return radiusScale(d); })
+                .attr("cx",containerWidth / 2)
+                .attr("cy",containerHeight / 2)
+                .attr("fill","none")
+                .attr("stroke-width",4)
+                .attr("stroke-opacity",0.4)
+                .attr("stroke", function(d) { return d3.hsl(hueScale(d), 1, 0.5); })
+            circles.exit().remove();
+        }
+
+        // run the loop
+        renderChart();
     }
 
     function startRecognition() {

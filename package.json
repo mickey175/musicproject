@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "base-64": "^1.0.0",
     "browserify-fs": "^1.0.0",
+    "d3": "^7.0.0",
     "dotenv": "^8.2.0",
     "mic": "^2.1.2",
     "node-mic-record": "^0.0.1",

@@ -14,17 +14,22 @@
     background-color: #04aa6d;
 }
 
-.audioVis{
+.d3Vis{
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     visibility: visible;
 }
 
-.audioHid{
+.d3Hid{
     height: 0;
-    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     visibility: hidden;
 }
 
 .headline{
     color: white;
+}
+
+.center {
+    margin: auto;
+    width: 25%;
+    padding: 10px;
 }

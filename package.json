@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "base-64": "^1.0.0",
     "browserify-fs": "^1.0.0",
+    "concurrently": "^6.2.0",
     "d3": "^7.0.0",
     "dotenv": "^8.2.0",
     "mic": "^2.1.2",
@@ -26,7 +27,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently --kill-others \"react-scripts start\" \"node src/service/micRecorder.js\"",
+    "dev": "concurrently --kill-others \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

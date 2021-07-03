@@ -43,13 +43,19 @@ export function fetchShazamDataByBase64(audioFingerprint){
     req.send(audioFingerprint);
 
     req.end(function (res) {
-        if (res.error) throw new Error(res.error);
+        if (res.error){
+            client.emit('error', '');
+        }
         client.emit('incoming', parseJSON(res.body));
         return res.body;
     });
 }
 
 function parseJSON(jsonSong){
+    console.log(jsonSong)
+    if(jsonSong.track === undefined){
+        return;
+    }
     let title = jsonSong.track.title;
     let subtitle = jsonSong.track.subtitle;
     let jsonSongInformation = {

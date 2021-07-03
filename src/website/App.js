@@ -4,6 +4,7 @@ import {useEffect, useState, setState} from "react";
 import io from 'socket.io-client';
 import SongPanel from "./components/songPanel";
 import AudioDots from "./components/d3AudioDots.js";
+import AudioBar from "./components/d3AudioBar";
 
 const ioClient = io.connect('http://localhost:8090');
 
@@ -53,7 +54,8 @@ function App() {
         <p id="p2" className={"headline"}>Music recognition and visualization</p>
         {/*<button className="button" onClick={inCreaseTool}>Next Visualisation</button>*/}
         <SongPanel title={state.title} subtitle={state.subtitle} className={state.isData ? 'songInfoVis' : 'songInfoHid'}/>
-        <AudioDots isData={state.isData} isActiveTool={state.activeTool}/>
+        <AudioBar isData={state.isData} isActiveTool={state.activeTool}/>
+        {/*<AudioDots isData={state.isData} isActiveTool={state.activeTool}/>*/}
         {/*<AudioCircle isData={state.isData} isActiveTool={state.activeTool}/>*/}
     </div>
   );

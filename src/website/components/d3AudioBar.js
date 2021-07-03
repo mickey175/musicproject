@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import styles from "./scetchStyle.css";
 import * as d3 from 'd3';
 
-export default function AudioDots(props) {
+export default function AudioBar(props) {
 
     let audioContext = null;
     let audioSource = null;
@@ -72,20 +72,19 @@ export default function AudioDots(props) {
     function draw(frequencyData){
 
         var colorScale = d3.scaleLinear()
-            .domain([0, 150])
-            .range(["#FFFF00","#FF5544"]);
+            .domain([0, 100])
+            .range(["#006400","#99c199"]);
 
         var circleX = d3.scaleLinear()
             .domain([0, frequencyData.length])
             .range([0, containerWidth*3]);
 
-        var dots = svg.selectAll('circle')
+        var rects = svg.selectAll('rect')
             .data(frequencyData)
-            .enter().append('circle')
-            .attr('r', function(d) { return 1.5; })
-            .attr('cx', function(d, i) { return circleX(i); })
-            .attr('cy', function(d) { return containerHeight/2 - d; })
-            .attr('fill', function(d, i) { return colorScale(d); });
+            .enter().append('rect')
+            .attr("x", function (d, i) {return circleX(i); })
+            .attr("width", function (d, i) { return 5; })
+            .attr("height", function (d, i) { return containerHeight; });
 
         function renderChart() {
 
@@ -93,9 +92,9 @@ export default function AudioDots(props) {
             const test = frequencyData.slice(300, 1000);
             analyser.getByteFrequencyData(test);
 
-            svg.selectAll('circle')
+            svg.selectAll('rect')
                 .data(test)
-                .attr('cy', function(d) { return containerHeight/2 - d; })
+                .attr('y', function(d) { return containerHeight-5-(d*3); })
                 .attr('fill', function(d, i) { return colorScale(d); });
         }
         // run the loop

@@ -16,11 +16,12 @@ export default function AudioCircle(props) {
     let chunks = [];
 
     React.useEffect(() => {
-        svgContainer = document.getElementById("audioVis");
+        svgContainer = document.getElementById("audioVis3");
         if (!svgContainer) {
             console.log("Error while trying to load svgContainer...");
         }
         drawD3SVG();
+        startRecord();
     })
 
     function startRecord(){
@@ -60,7 +61,7 @@ export default function AudioCircle(props) {
     }
 
     function drawD3SVG(){
-        svg = d3.select("#audioVis")
+        svg = d3.select("#audioVis3")
             .style("background", "transparent")
             .append("svg")
             .attr("width", containerWidth)
@@ -79,16 +80,12 @@ export default function AudioCircle(props) {
                 .domain([0, d3.max(test)])
                 .range([0, containerHeight / 2 - 10]);
 
-            var hueScale = d3.scaleLinear()
-                .domain([0, d3.max(test)])
-                .range([0, 360]);
-
             var circles = svg.selectAll('circle')
                 .data(test);
 
             circles.enter().append('circle');
             circles.attr("r", function (d) {
-                return hueScale(d);
+                return radiusScale(d);
             })
                 .attr("cx", containerWidth / 2)
                 .attr("cy", containerHeight / 2)
@@ -102,7 +99,6 @@ export default function AudioCircle(props) {
     }
 
     function startRecognition() {
-        startRecord();
         fetch('http://localhost:8090/', {method: 'GET'})
             .then(function(response) {
                 if(response.ok) {
@@ -117,12 +113,12 @@ export default function AudioCircle(props) {
     }
 
     return(
-        <span>
-            <div id="audioVis" className={!props.isData && props.isActiveTool === 1 ? "d3Vis": "d3Hid"}/>
-            <div className={"center"}>
+        <div>
+            <div id="audioVis3" className={"d3Vis"}/>
+            <div>
                 <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
                 <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>
             </div>
-        </span>
+        </div>
     );
 }

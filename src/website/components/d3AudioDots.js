@@ -20,11 +20,11 @@ export default function AudioDots(props) {
         if (!svgContainer) {
             console.log("Error while trying to load svgContainer...");
         }
+        drawD3SVG();
+        startRecord();
     })
 
     function startRecord(){
-        drawD3SVG();
-
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.mediaDevices.getUserMedia({
             video : false,
@@ -61,7 +61,7 @@ export default function AudioDots(props) {
     }
 
     function drawD3SVG(){
-        svg = d3.select("#audioVis")
+        svg = d3.select("#audioVis2")
             .style("background", "transparent")
             .append("svg")
             .attr("width", containerWidth)
@@ -103,8 +103,6 @@ export default function AudioDots(props) {
     }
 
     function startRecognition() {
-        console.log(props.isActiveTool)
-        startRecord();
         fetch('http://localhost:8090/', {method: 'GET'})
             .then(function(response) {
                 if(response.ok) {
@@ -120,7 +118,7 @@ export default function AudioDots(props) {
 
     return(
         <span>
-            <div id="audioVis" className={"d3Vis"}/>
+            <div id="audioVis2" className={"d3Vis"}/>
             <div>
                 <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
                 <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>

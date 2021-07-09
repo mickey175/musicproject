@@ -16,15 +16,15 @@ export default function AudioBar(props) {
 
     React.useEffect(() => {
         console.log(props)
-        svgContainer = document.getElementById("audioVis2");
+        svgContainer = document.getElementById("audioVis1");
         if (!svgContainer) {
             console.log("Error while trying to load svgContainer...");
         }
+        drawD3SVG();
+        startRecord();
     })
 
     function startRecord(){
-        drawD3SVG();
-
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.mediaDevices.getUserMedia({
             video : false,
@@ -61,7 +61,7 @@ export default function AudioBar(props) {
     }
 
     function drawD3SVG(){
-        svg = d3.select("#audioVis")
+        svg = d3.select("#audioVis1")
             .style("background", "transparent")
             .append("svg")
             .attr("width", containerWidth)
@@ -103,7 +103,6 @@ export default function AudioBar(props) {
 
     function startRecognition() {
         console.log(props.isActiveTool)
-        startRecord();
         fetch('http://localhost:8090/', {method: 'GET'})
             .then(function(response) {
                 if(response.ok) {
@@ -118,12 +117,12 @@ export default function AudioBar(props) {
     }
 
     return(
-        <span>
-            <div id="audioVis" className={"d3Vis"}/>
+        <div>
+            <div id="audioVis1" className={"d3Vis"}/>
             <div>
                 <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
                 <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>
             </div>
-        </span>
+        </div>
     );
 }

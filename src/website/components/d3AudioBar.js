@@ -24,6 +24,12 @@ export default function AudioBar(props) {
         startRecord();
     })
 
+    const initialState = {
+        animation: true
+    };
+
+    const [state, setState] = useState(initialState);
+
     function startRecord(){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.mediaDevices.getUserMedia({
@@ -56,11 +62,18 @@ export default function AudioBar(props) {
     }
 
     function stopRecording(){
+        setState({
+            animation : true
+        })
+
         mediaRecorder.stop();
         audioSource.disconnect()
     }
 
     function drawD3SVG(){
+        const audioVisContainer = document.getElementById("audioVis1");
+        audioVisContainer.innerHTML = '';
+
         svg = d3.select("#audioVis1")
             .style("background", "transparent")
             .append("svg")
@@ -73,7 +86,7 @@ export default function AudioBar(props) {
 
         var colorScale = d3.scaleLinear()
             .domain([0, 100])
-            .range(["#006400","#99c199"]);
+            .range(["#E1C340","#a37400"]);
 
         var circleX = d3.scaleLinear()
             .domain([0, frequencyData.length])
@@ -102,7 +115,10 @@ export default function AudioBar(props) {
     }
 
     function startRecognition() {
-        console.log(props.isActiveTool)
+        setState({
+            animation : false
+        })
+
         fetch('http://localhost:8090/', {method: 'GET'})
             .then(function(response) {
                 if(response.ok) {
@@ -118,7 +134,7 @@ export default function AudioBar(props) {
 
     return(
         <div>
-            <div id="audioVis1" className={"d3Vis"}/>
+            <div id="audioVis1" className={state.animation === true ? "d3Vis" : "d3Animation"}/>
             <div>
                 <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
                 <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>

@@ -24,6 +24,12 @@ export default function AudioCircle(props) {
         startRecord();
     })
 
+    const initialState = {
+        animation: true
+    };
+
+    const [state, setState] = useState(initialState);
+
     function startRecord(){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.mediaDevices.getUserMedia({
@@ -56,11 +62,17 @@ export default function AudioCircle(props) {
     }
 
     function stopRecording(){
+        setState({
+            animation : true
+        })
         mediaRecorder.stop();
         audioSource.disconnect()
     }
 
     function drawD3SVG(){
+        const audioVisContainer = document.getElementById("audioVis3");
+        audioVisContainer.innerHTML = '';
+
         svg = d3.select("#audioVis3")
             .style("background", "transparent")
             .append("svg")
@@ -70,9 +82,11 @@ export default function AudioCircle(props) {
 
     function draw(frequencyData){
         function renderChart() {
+
             setTimeout(function() {
                 requestAnimationFrame(renderChart);
             }, 1000 / framesPerSecond);
+
             const test = frequencyData.slice(300, 1000);
             analyser.getByteFrequencyData(test);
 
@@ -91,14 +105,18 @@ export default function AudioCircle(props) {
                 .attr("cy", containerHeight / 2)
                 .attr("fill", "none")
                 .attr("stroke-width", 1)
-                .attr("stroke-opacity", 0.4)
-                .attr("stroke", "#3F888F")
+                .attr("stroke-opacity", 1)
+                .attr("stroke", "#E1C340")
             circles.exit().remove();
         }
         renderChart();
     }
 
     function startRecognition() {
+        setState({
+            animation : false
+        })
+
         fetch('http://localhost:8090/', {method: 'GET'})
             .then(function(response) {
                 if(response.ok) {
@@ -114,7 +132,7 @@ export default function AudioCircle(props) {
 
     return(
         <div>
-            <div id="audioVis3" className={"d3Vis"}/>
+            <div id="audioVis3" className={state.animation === true ? "d3Vis" : "d3Animation"}/>
             <div>
                 <button title="startRecord" className={"button"} onClick={startRecognition}>Start music recognition</button>
                 <button title="startRecord" className={"button"} onClick={stopRecording}>Stop music recognition</button>

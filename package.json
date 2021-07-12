@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others \"react-scripts start\" \"node src/service/micRecorder.js\"",
-    "dev": "concurrently --kill-others \"react-scripts start\"",
+    "dev": "concurrently --kill-others \"react-scripts start\" \"node src/service/micRecorder.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

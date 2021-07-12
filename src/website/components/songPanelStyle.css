@@ -1,10 +1,39 @@
+img {
+    float:left;
+    width: 300px;
+    padding: 50px;
+    display: inline-block;
+}
+
+.h3-position {
+    padding-top: 50px;
+    text-align: left;
+}
+
 .songInfoVis{
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     visibility: visible;
+    height: auto;
+    width: 1400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 .songInfoHid{
     height: 0;
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     visibility: hidden;
+}
+
+table > tr {
+    height:60px;
+}
+
+table > tr > th {
+    width: 150px;
+}
+
+table > tr > td {
+    width: 250px;
 }

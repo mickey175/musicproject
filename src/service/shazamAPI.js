@@ -51,16 +51,22 @@ export function fetchShazamDataByBase64(audioFingerprint){
     });
 }
 
+export function verboseMode(){
+    console.log("Verbose mode is on...")
+    client.emit('incoming', null);
+}
+
 function parseJSON(jsonSong){
-    console.log(jsonSong)
     if(jsonSong.track === undefined){
         return;
     }
     let title = jsonSong.track.title;
     let subtitle = jsonSong.track.subtitle;
+    let url = jsonSong.track.images.background;
     let jsonSongInformation = {
         title: title,
         subtitle: subtitle,
+        url: url
     }
     return jsonSongInformation;
 }

@@ -1,5 +1,5 @@
 import record from 'node-mic-record'
-import {fetchShazamDataByBase64} from "./shazamAPI.js";
+import {fetchShazamDataByBase64, verboseMode} from "./shazamAPI.js";
 import * as wav from "wav";
 import {Readable} from "stream";
 import * as fs from "fs";
